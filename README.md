@@ -8,5 +8,5 @@
 ## 封包为单可执行文件:
 1. 安装pyinstaller
 2. 执行`pyinstaller  .\master_duel_main.py  -F  -n MasterDuel图像翻译插件`,等待执行结束
-3. 以上命令会生成单文件可执行exe,将`cards.db`,生成好的`card_image_check.db`复制到对应单文件同目录下
-4. <strong>记得以管理员身份执行,否则程序将无权获取其他进程hwnd!</strong>
+3. 以上命令会生成单文件可执行exe(dist目录下),将`cards.db`,生成好的`card_image_check.db`复制到对应单文件同目录下
+4. <strong>记得以管理员身份执行,否则程序将无权获取其他进程句柄!</strong>
