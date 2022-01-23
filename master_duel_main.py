@@ -23,7 +23,7 @@ x_2=(424/480)
 #决定每次检测之后显示最相似的条目总数(避免可能的识别误差)
 show_search_limit=1
 
-md_process_name='masterdue.exe'
+md_process_name='masterduel.exe'
 md_process_window_name='masterduel'
 
 #for regenerate card image
