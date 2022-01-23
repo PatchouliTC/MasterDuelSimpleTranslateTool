@@ -4,7 +4,7 @@
 2. 直接启动`master_duel_main.py`文件,根据快捷键使用相关功能
 ## 其他注意事项:
 1. `cards.cdb`来自 [YGODataBase](https://github.com/mycard/ygopro-database),下载后将对应语言下的`cards.cdb`放入根目录替换即可
-2. `card_image_check.db`是缓存的图象匹配数据库,如果遇到卡牌数据更新,请删除该文件,并来[这里](https://forum.duelistsunite.org/t/japanese-card-pics/115)下载相关卡图,<strong>一定记得下载1920x1080 (484x700)高清卡图</strong>,下载后的卡图解压到`origin_ygo_img`目录
+2. `card_image_check.db`是缓存的图象匹配数据库,如果遇到卡牌数据更新,请删除该文件,并来[这里](https://forum.duelistsunite.org/t/japanese-card-pics/115)下载相关卡图,<strong>一定记得下载1920x1080 (484x700)高清卡图</strong>,下载后的卡图解压到`origin_ygo_img`目录[该文件夹自行建立]
 ## 封包为单可执行文件:
 1. 安装pyinstaller
 2. 执行`pyinstaller  .\master_duel_main.py  -F  -n MasterDuel图像翻译插件`,等待执行结束
