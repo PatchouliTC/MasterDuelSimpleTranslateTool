@@ -1,0 +1,11 @@
+*.zip
+venv
+__pycache__
+*.pyproj
+*.pyc
+simple_img/*
+origin_ygo_img/*
+build
+dist
+*.spec
+*.cdb
