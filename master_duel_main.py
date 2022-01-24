@@ -273,6 +273,9 @@ def cv_card_info_at_duel_room(debug:bool=False):
     return target_img_dhash
 
 def translate(type:int,cache:list,debug:bool=False):
+    if cache is None or len(cache)==0:
+        print("Unable read image dhash cache,exit")
+        return
     cls()
     start_time=time.time()
     if type==1:
