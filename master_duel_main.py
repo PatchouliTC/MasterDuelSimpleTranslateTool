@@ -278,7 +278,7 @@ def cv_card_info_at_duel_room(debug:bool=False):
 
 def translate(type:int,cache:list,debug:bool=False):
     if cache is None or len(cache)==0:
-        print("无法读取图像指纹信息,不执行操作")
+        print("无法读取图像指纹信息,不执行操作(card_image_check.db是不是12K，是的话这是个空库没数据的)")
         return
     cls()
     start_time=time.time()
