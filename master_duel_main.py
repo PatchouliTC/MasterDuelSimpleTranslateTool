@@ -244,10 +244,10 @@ def cv_card_info_at_duel_room(debug:bool=False):
     zoom_w=result['current_window_zoom'][0]
     zoom_h=result['current_window_zoom'][1]
     
-    _crop_area=(duel_left_top[0]*zoom_w,
-                duel_left_top[1]*zoom_h,
-                duel_right_bottom[0]*zoom_w,
-                duel_right_bottom[1]*zoom_h)
+    _crop_area=(int(duel_left_top[0]*zoom_w),
+                int(duel_left_top[1]*zoom_h),
+                int(duel_right_bottom[0]*zoom_w),
+                int(duel_right_bottom[1]*zoom_h))
 
     _img=result['image'].crop(_crop_area)
     
@@ -326,5 +326,5 @@ if __name__ == '__main__':
     print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
     keyboard.add_hotkey('shift+g',translate,args=(1,cache))
     keyboard.add_hotkey('shift+f',translate,args=(2,cache))
-    keyboard.wait('esc')
+    keyboard.wait('ctrl+q')
     print("程序结束")
