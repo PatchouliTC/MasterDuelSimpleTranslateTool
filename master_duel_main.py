@@ -327,14 +327,17 @@ def translate(type:int,cache:list,debug:bool=False):
     print('匹配用时: %.6f 秒'%(end_time-start_time))
     print(f"识别结果【匹配概率由高到低排序】")
     for card in results:
+        if card['score']<0.93:
+            print("警告:相似度匹配过低,可能游戏卡图与缓存库的版本卡图不同或未知原因截图区域错误\n修改enable_debug查看截取图片信息分析原因\n")
         print(f"{card['name']}(密码:{card['card']},相似度:{card['score']})\n{card['desc']}\n")
     print("-----------------------------------")
     print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
         
 if __name__ == '__main__':
     cache=get_image_db_cache()
+    enable_debug=True
     print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
-    keyboard.add_hotkey('shift+g',translate,args=(1,cache))
-    keyboard.add_hotkey('shift+f',translate,args=(2,cache))
+    keyboard.add_hotkey('shift+g',translate,args=(1,cache,enable_debug))
+    keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
     keyboard.wait('ctrl+q')
     print("程序结束")
