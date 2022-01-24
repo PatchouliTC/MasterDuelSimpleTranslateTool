@@ -187,6 +187,7 @@ def window_shot_image(hwnd:int):
     win32gui.ReleaseDC(hwnd, hwndDC)
     if result != 1:
         return False,"无法创建屏幕图像缓存"
+    print(f"Win32返回的游戏窗口分辨率({w}x{h})，相关坐标将会进行缩放，缩放比率将为({w/1920},{h/1080})")
     return True,{
         "image":im,
         "current_window_zoom":(w/1920,h/1080),
@@ -209,10 +210,10 @@ def cv_card_info_at_deck_room(debug:bool=False):
     zoom_w=result['current_window_zoom'][0]
     zoom_h=result['current_window_zoom'][1]
     
-    _crop_area=(deck_left_top[0]*zoom_w,
-                deck_left_top[1]*zoom_h,
-                deck_right_bottom[0]*zoom_w,
-                deck_right_bottom[1]*zoom_h)
+    _crop_area=(int(deck_left_top[0]*zoom_w),
+                int(deck_left_top[1]*zoom_h),
+                int(deck_right_bottom[0]*zoom_w),
+                int(deck_right_bottom[1]*zoom_h))
 
     _img=result['image'].crop(_crop_area)
     

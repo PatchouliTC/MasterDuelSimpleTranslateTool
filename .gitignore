@@ -9,3 +9,5 @@ build
 dist
 *.spec
 *.cdb
+*.png
+*.jpg
