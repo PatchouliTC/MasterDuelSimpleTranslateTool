@@ -151,7 +151,10 @@ def get_game_window_info():
 def window_shot_image(hwnd:int):
     app = win32gui.GetWindowText(hwnd)
     if not hwnd or hwnd<=0 or len(app)==0:
-        return False,'Not found md game process,exit'
+        return False,'无法找到游戏进程,不进行操作'
+    isiconic=win32gui.IsIconic(hwnd)
+    if isiconic:
+        return False,'游戏处于最小化窗口状态,无法获取屏幕图像,不执行操作'
     
     left, top, right, bot = win32gui.GetClientRect(hwnd)
     
@@ -182,7 +185,7 @@ def window_shot_image(hwnd:int):
     mfcDC.DeleteDC()
     win32gui.ReleaseDC(hwnd, hwndDC)
     if result != 1:
-        return False,"print window failed"
+        return False,"无法创建屏幕图像缓存"
     return True,{
         "image":im,
         "current_window_zoom":(w/1920,h/1080),
@@ -274,7 +277,7 @@ def cv_card_info_at_duel_room(debug:bool=False):
 
 def translate(type:int,cache:list,debug:bool=False):
     if cache is None or len(cache)==0:
-        print("Unable read image dhash cache,exit")
+        print("无法读取图像指纹信息,不执行操作")
         return
     cls()
     start_time=time.time()
@@ -308,7 +311,11 @@ def translate(type:int,cache:list,debug:bool=False):
     
     ygo_sql=sqlite3.connect(c_ygo_dir)
     for card in results:
-        cursor = ygo_sql.execute(f"SELECT name,desc from texts WHERE id='{card['card']}' LIMIT 1")
+        try:
+            cursor = ygo_sql.execute(f"SELECT name,desc from texts WHERE id='{card['card']}' LIMIT 1")
+        except:
+            print("读取ygo数据库异常,是不是没有将card.cdb放进来")
+            return
         if cursor.arraysize!=1:
             print(f"card {card['card']} not found")
             ygo_sql.close()
