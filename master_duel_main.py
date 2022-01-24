@@ -3,6 +3,7 @@ import time
 from PIL import Image,ImageFile
 import dhash
 import sqlite3
+import pywintypes
 import win32api,win32process,win32gui,win32ui,win32con
 from ctypes import windll
 import keyboard
