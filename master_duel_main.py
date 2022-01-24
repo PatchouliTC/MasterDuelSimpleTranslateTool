@@ -1,6 +1,4 @@
 import os
-import sys
-from threading import Thread
 import time
 from PIL import Image,ImageFile
 import dhash
@@ -33,10 +31,6 @@ fileDir='./origin_ygo_img'
 
 c_dhash_dir='./card_image_check.db'
 c_ygo_dir='./cards.cdb'
-
-pause_hotkey='ctrl+p'
-exit_hotkey='ctrl+q'
-switch_hotkey='ctrl+s'
 
 #for debug
 #debug_raw_img1 = './simple_img/s5.png'
@@ -113,7 +107,7 @@ def generate_card_img_basic_dhash(_list):
             #     'code':_file_name,
             #     'dhash':_temp_dhash
             # })   
-            conn.execute(f"INSERT INTO CardDhash (code,dhash) VALUES ('{_file_name}', '{_temp_dhash}' )");
+            conn.execute(f"INSERT INTO CaGrdDhash (code,dhash) VALUES ('{_file_name}', '{_temp_dhash}' )");
 
             print(f"{counter} time,generate card {_file_name} dhash {_temp_dhash}")
         print("generate done")
@@ -281,13 +275,11 @@ def cv_card_info_at_duel_room(debug:bool=False):
     
     return target_img_dhash
 
-def translate(type:int,cache:list,debug:bool=False,ygo_sql_ins=None):
+def translate(type:int,cache:list,debug:bool=False):
     if cache is None or len(cache)==0:
         print("无法读取图像指纹信息,不执行操作")
         return
     cls()
-    get_at=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-    print(f"检测时间:{get_at}")
     start_time=time.time()
     if type==1:
         print("翻译卡组卡片")
@@ -317,11 +309,7 @@ def translate(type:int,cache:list,debug:bool=False,ygo_sql_ins=None):
             results=results[:show_search_limit]  
     end_time=time.time()
     
-    if not ygo_sql_ins:
-        ygo_sql=sqlite3.connect(c_ygo_dir)
-    else:
-        ygo_sql=ygo_sql_ins
-        
+    ygo_sql=sqlite3.connect(c_ygo_dir)
     for card in results:
         try:
             cursor = ygo_sql.execute(f"SELECT name,desc from texts WHERE id='{card['card']}' LIMIT 1")
@@ -330,14 +318,12 @@ def translate(type:int,cache:list,debug:bool=False,ygo_sql_ins=None):
             return
         if cursor.arraysize!=1:
             print(f"card {card['card']} not found")
-            if not ygo_sql_ins:
-                ygo_sql.close()
+            ygo_sql.close()
             return
         data=cursor.fetchone()
         card['name']=data[0]
         card['desc']=data[1]
-    if not ygo_sql_ins:
-        ygo_sql.close()
+    ygo_sql.close()
     print('匹配用时: %.6f 秒'%(end_time-start_time))
     print(f"识别结果【匹配概率由高到低排序】")
     for card in results:
@@ -345,63 +331,13 @@ def translate(type:int,cache:list,debug:bool=False,ygo_sql_ins=None):
             print("警告:相似度匹配过低,可能游戏卡图与缓存库的版本卡图不同或未知原因截图区域错误\n修改enable_debug查看截取图片信息分析原因\n")
         print(f"{card['name']}(密码:{card['card']},相似度:{card['score']})\n{card['desc']}\n")
     print("-----------------------------------")
-    print(f"{switch_hotkey}切换检测卡组/决斗详细卡片信息,{pause_hotkey}暂停检测,{exit_hotkey}退出程序\n请确保您已经点开了目标卡片的详细信息!!!")
-
-translate_type=0
-pause=True
-process_exit=False
-enable_debug=False
+    print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
         
-def translate_check_thread():
-    global translate_type
-    global pause
-    global process_exit
-    global enable_debug
-    
-    cache=get_image_db_cache()
-    
-    ygo_sql=sqlite3.connect(c_ygo_dir)
-    while(not process_exit):
-        if pause:
-            cls()
-            print("暂停")
-            print(f"{switch_hotkey}切换检测卡组/决斗详细卡片信息,{pause_hotkey}暂停检测,{exit_hotkey}退出程序\n请确保您已经点开了目标卡片的详细信息!!!")
-        elif translate_type==0:
-            translate(translate_type+1,cache,enable_debug,ygo_sql)
-        elif translate_type==1:
-            translate(translate_type+1,cache,enable_debug,ygo_sql)
-        else:
-            print("Unknown Operator")
-        time.sleep(1)
-    ygo_sql.close()
-    print("程序结束")
-
-def status_change(switch:bool,need_pause:bool,exit:bool):
-    global translate_type
-    global pause
-    global process_exit
-    global enable_debug
-    process_exit=exit
-    pause=need_pause
-    if switch:
-        translate_type=int(not bool(translate_type))
-
-
-
 if __name__ == '__main__':
-    # cache=get_image_db_cache()
-    # enable_debug=False
-    # print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
-    # keyboard.add_hotkey('shift+g',translate,args=(1,cache,enable_debug))
-    # keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
-    # keyboard.wait('ctrl+q')
-    # print("程序结束")
-
-    keyboard.add_hotkey(switch_hotkey,status_change,args=(True,False,False))
-    keyboard.add_hotkey(exit_hotkey,status_change,args=(False,False,True))
-    keyboard.add_hotkey(pause_hotkey,status_change,args=(False,True,False))
-    
-    p = Thread(target=translate_check_thread)
-    p.start()
-    p.join()
-    
+    cache=get_image_db_cache()
+    enable_debug=False
+    print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,esc关闭\n请确保您已经点开了目标卡片的详细信息!!!")
+    keyboard.add_hotkey('shift+g',translate,args=(1,cache,enable_debug))
+    keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
+    keyboard.wait('ctrl+q')
+    print("程序结束")
