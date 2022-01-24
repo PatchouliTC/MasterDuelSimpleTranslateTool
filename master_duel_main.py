@@ -351,13 +351,15 @@ translate_type=0
 pause=True
 process_exit=False
 enable_debug=False
-
         
 def translate_check_thread():
     global translate_type
     global pause
     global process_exit
     global enable_debug
+    
+    cache=get_image_db_cache()
+    
     ygo_sql=sqlite3.connect(c_ygo_dir)
     while(not process_exit):
         if pause:
@@ -394,8 +396,6 @@ if __name__ == '__main__':
     # keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
     # keyboard.wait('ctrl+q')
     # print("程序结束")
-    
-    cache=get_image_db_cache()
 
     keyboard.add_hotkey(switch_hotkey,status_change,args=(True,False,False))
     keyboard.add_hotkey(exit_hotkey,status_change,args=(False,False,True))
