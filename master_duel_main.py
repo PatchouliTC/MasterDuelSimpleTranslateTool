@@ -108,7 +108,7 @@ def generate_card_img_basic_dhash(_list):
             #     'code':_file_name,
             #     'dhash':_temp_dhash
             # })   
-            conn.execute(f"INSERT INTO CaGrdDhash (code,dhash) VALUES ('{_file_name}', '{_temp_dhash}' )");
+            conn.execute(f"INSERT INTO CardDhash (code,dhash) VALUES ('{_file_name}', '{_temp_dhash}' )");
 
             print(f"{counter} time,generate card {_file_name} dhash {_temp_dhash}")
         print("generate done")
