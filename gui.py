@@ -4,13 +4,19 @@ from PIL import ImageTk, Image
 from threading import Thread
 import master_duel_auto_scan_version as mda
 
-# front for the card description only
+# front for the texts
 FRONT_SIZE = 15
 FRONT = '微软雅黑'
 
 # default card pic to show when there's no match
 # ideally should be the card back
-DEFAULT_PIC = 10000
+DEFAULT_PIC = "10000"
+
+# the width of the card pic files is 400
+WINDOW_WIDTH = 400
+
+# interval for updating info in gui, in ms, independent from searching
+UPDATE_INTERVAL = 50
 
 
 class App():
@@ -18,8 +24,12 @@ class App():
         self.tk = tk.Tk()
         self.tk.title("ygoMD translater")
         self.tk.minsize(200, 200)
-        self.frame_control = tk.Frame(master=self.tk, width=400, height=50)
-        self.frame_show = tk.Frame(master=self.tk, width=400, height=200)
+        # manually resizing th window will cause th window to stop auto resizing, therefore disabled
+        self.tk.resizable(False, False)
+        self.frame_control = tk.Frame(
+            master=self.tk, width=WINDOW_WIDTH, height=50)
+        self.frame_show = tk.Frame(
+            master=self.tk, width=WINDOW_WIDTH, height=200)
 
         # button in frame_control
         self.button_Start = tk.Button(
@@ -43,22 +53,13 @@ class App():
         )
 
         # contents in frame_show
-
-        # no need to show name
-        # self.card_name = tk.Label(
-        #     master=self.frame_show,
-        #     font=("Courier", 33),
-        #     text=""
-        # )
-
         self.card_desc = tk.Message(
             master=self.frame_show,
             font=(FRONT, FRONT_SIZE),
             text="",
             justify=tk.LEFT,
-            # width in piels, the original width of the card pics is 400
-            # this width is slightly smaller to leave room for special characters
-            width=380
+            # width in piels, -20 to leave room for special characters
+            width=WINDOW_WIDTH - 20
         )
 
         self.frame_control.pack(fill=tk.BOTH, expand=False)
@@ -66,10 +67,8 @@ class App():
         self.button_Mode.pack(side=tk.RIGHT)
         self.frame_show.pack(fill=tk.BOTH, expand=True)
 
-        # no need to show name
-        # self.card_name.pack()
         try:
-            with Image.open('pics/10000.jpg') as file:
+            with Image.open("pics/" + DEFAULT_PIC + ".jpg") as file:
                 img = ImageTk.PhotoImage(file)
                 self.card_pic = tk.Label(
                     master=self.frame_show,
@@ -78,7 +77,13 @@ class App():
                 self.card_pic.image = img
                 self.card_pic.pack()
         except FileNotFoundError:
-            pass
+            # if fail to load pic, show the name instead
+            self.card_name = tk.Label(
+                master=self.frame_show,
+                font=(FRONT, FRONT_SIZE),
+                text=""
+            )
+            self.card_name.pack()
 
         self.card_desc.pack()
 
@@ -87,18 +92,21 @@ class App():
         if mda.g_card_show and mda.g_card_show["card"] != last_card:
             last_card = mda.g_card_show["card"]
 
-            # no need to show name
-            # self.card_name["text"] = mda.g_card_show["name"]
-            self.card_desc["text"] = mda.g_card_show["desc"]
             try:
-                with Image.open('pics/' + mda.g_card_show['card'] + '.jpg') as file:
+                # 83764718 and 83764719 are different Shishasoses
+                card_No = "83764718" if mda.g_card_show["card"] == "83764719" else mda.g_card_show["card"]
+                with Image.open("pics/" + card_No + ".jpg") as file:
                     img = ImageTk.PhotoImage(file)
                     self.card_pic.configure(image=img)
                     self.card_pic.image = img
             except FileNotFoundError:
-                pass
+                # if fail to load pic, show the name instead
+                self.card_name["text"] = mda.g_card_show["name"]
 
-        self.tk.after(100, lambda: self.update_frame_show(last_card))
+            self.card_desc["text"] = mda.g_card_show["desc"]
+
+        self.tk.after(UPDATE_INTERVAL,
+                      lambda: self.update_frame_show(last_card))
 
 # kill the searching thread and the gui when exit
 
@@ -116,11 +124,11 @@ def main():
 
     app.tk.protocol("WM_DELETE_WINDOW", lambda: on_close(app))
 
-    app.tk.after(1000, app.update_frame_show(DEFAULT_PIC))
+    app.tk.after(UPDATE_INTERVAL, app.update_frame_show(DEFAULT_PIC))
     # put window on top
-    app.tk.attributes('-topmost', True)
+    app.tk.attributes("-topmost", True)
     app.tk.mainloop()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
