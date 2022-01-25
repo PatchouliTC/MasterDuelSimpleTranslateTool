@@ -4,7 +4,7 @@ from PIL import Image,ImageFile
 import dhash
 import sqlite3
 import pywintypes
-import win32api,win32process,win32gui,win32ui,win32con
+import win32api,win32process,win32gui,win32ui,win32con,win32print
 from ctypes import windll
 import keyboard
 
@@ -162,6 +162,18 @@ def window_shot_image(hwnd:int):
     w = right - left
     h = bot - top
     
+    #获取屏幕未缩放分辨率
+    hDc=win32gui.GetDC(0)
+    _screen_w=win32print.GetDeviceCaps(hDc,win32con.DESKTOPHORZRES)
+    _screen_h=win32print.GetDeviceCaps(hDc,win32con.DESKTOPVERTRES)
+    
+    _current_screen_w=win32api.GetSystemMetrics(0)
+    _current_screen_h=win32api.GetSystemMetrics(1)
+    
+    desktop_global_resize_w_zoom=_current_screen_w/_screen_w
+    desktop_global_resize_h_zoom=_current_screen_h/_screen_h
+    
+    
     hwndDC = win32gui.GetWindowDC(hwnd)
     mfcDC  = win32ui.CreateDCFromHandle(hwndDC)
     saveDC = mfcDC.CreateCompatibleDC()
@@ -187,10 +199,10 @@ def window_shot_image(hwnd:int):
     win32gui.ReleaseDC(hwnd, hwndDC)
     if result != 1:
         return False,"无法创建屏幕图像缓存"
-    print(f"Win32返回的游戏窗口分辨率({w}x{h})，相关坐标将会进行缩放，缩放比率将为({w/1920},{h/1080})")
+    print(f"Win32返回的游戏窗口分辨率({w}x{h}),桌面长宽缩放倍率({desktop_global_resize_w_zoom},{desktop_global_resize_h_zoom})，相关坐标将会进行缩放，缩放比率将为({w/1920/desktop_global_resize_w_zoom},{h/1080/desktop_global_resize_h_zoom})")
     return True,{
         "image":im,
-        "current_window_zoom":(w/1920,h/1080),
+        "current_window_zoom":(w/1920/desktop_global_resize_w_zoom,h/1080/desktop_global_resize_h_zoom),
     }
       
       
@@ -337,7 +349,7 @@ def translate(type:int,cache:list,debug:bool=False):
         
 if __name__ == '__main__':
     cache=get_image_db_cache()
-    enable_debug=False
+    enable_debug=True
     print("shift+g翻译卡组卡片,shift+f翻译决斗中卡片,ctrl+q关闭\n请确保您已经点开了目标卡片的详细信息!!!")
     keyboard.add_hotkey('shift+g',translate,args=(1,cache,enable_debug))
     keyboard.add_hotkey('shift+f',translate,args=(2,cache,enable_debug))
