@@ -3,6 +3,8 @@
 [注意该程序仅限windows环境使用,大量引用win32接口]
 2. 直接启动`master_duel_main.py`文件,根据快捷键使用相关功能
 
+<strong>如果用提供的card_image_check.db识别效果不佳，可以解压`card_image_check_TCG_version_20220125.zip`中基于TCG卡图的指纹缓存覆盖card_image_check.db</strong>
+
 [master_duel_manual_version.py是手动触发图像检测版本,main以及master_duel_auto_scan_version是周期触发图像检测版本]
 ## 其他注意事项:
 1. `cards.cdb`来自 [YGODataBase](https://github.com/mycard/ygopro-database),下载后将对应语言下的`cards.cdb`放入根目录即可
