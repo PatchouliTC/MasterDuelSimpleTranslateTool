@@ -1,6 +1,7 @@
 # 使用图形界面
 在原安装基础上添加卡图文件夹，命名为pics。
 直接运行gui.py 即可
+如果使用该版本,在下方命令`pip install -r requirements.txt`中requirements.txt变更成requirements_gui_version.txt(额外需要tkinter库)
 
 # MasterDuel图像识别翻译命令行工具
 1. 安装并进入python虚拟环境[善用搜索引擎],执行`pip install -r requirements.txt`安装相关依赖
