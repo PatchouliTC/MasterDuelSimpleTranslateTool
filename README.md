@@ -1,3 +1,7 @@
+# 使用图形界面
+在原安装基础上添加卡图文件夹，命名为pics。
+直接运行gui.py 即可
+
 # MasterDuel图像识别翻译命令行工具
 1. 安装并进入python虚拟环境[善用搜索引擎],执行`pip install -r requirements.txt`安装相关依赖
 [注意该程序仅限windows环境使用,大量引用win32接口]
