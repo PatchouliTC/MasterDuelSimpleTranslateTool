@@ -1,22 +1,10 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 
-from threading import Thread
-import master_duel_auto_scan_version as mda
+# import module for getting card information
+import search_engine as search
 
-# front for the texts
-FRONT_SIZE = 15
-FRONT = '微软雅黑'
-
-# default card pic to show when there's no match
-# ideally should be the card back
-DEFAULT_PIC = "10000"
-
-# the width of the card pic files is 400
-WINDOW_WIDTH = 400
-
-# interval for updating info in gui, in ms, independent from searching
-UPDATE_INTERVAL = 50
+from config import *
 
 
 class App():
@@ -39,7 +27,7 @@ class App():
             height=2,
             bg="grey",
             fg="blue",
-            command=lambda: mda.status_change(False, True, False)
+            command=search.pause
         )
 
         self.button_Mode = tk.Button(
@@ -49,7 +37,7 @@ class App():
             height=2,
             bg="grey",
             fg="blue",
-            command=lambda: mda.status_change(True, False, False)
+            command=search.switch_mode
         )
 
         # contents in frame_show
@@ -88,22 +76,22 @@ class App():
         self.card_desc.pack()
 
     def update_frame_show(self, last_card):
-
-        if mda.g_card_show and mda.g_card_show["card"] != last_card:
-            last_card = mda.g_card_show["card"]
+        current_card = search.get_card_No()
+        if current_card and current_card != last_card:
+            last_card = current_card
 
             try:
                 # 83764718 and 83764719 are different Shishasoses
-                card_No = "83764718" if mda.g_card_show["card"] == "83764719" else mda.g_card_show["card"]
+                card_No = "83764718" if current_card == "83764719" else current_card
                 with Image.open("pics/" + card_No + ".jpg") as file:
                     img = ImageTk.PhotoImage(file)
                     self.card_pic.configure(image=img)
                     self.card_pic.image = img
             except FileNotFoundError:
                 # if fail to load pic, show the name instead
-                self.card_name["text"] = mda.g_card_show["name"]
+                self.card_name["text"] = search.get_card_name()
 
-            self.card_desc["text"] = mda.g_card_show["desc"]
+            self.card_desc["text"] = search.get_card_desc()
 
         self.tk.after(UPDATE_INTERVAL,
                       lambda: self.update_frame_show(last_card))
@@ -111,18 +99,15 @@ class App():
 # kill the searching thread and the gui when exit
 
 
-def on_close(app):
-    mda.status_change(False, False, True)
+def on_close(app, search):
+    search.kill()
     app.tk.destroy()
 
 
 def main():
     app = App()
-
-    scan_card = Thread(target=mda.main)
-    scan_card.start()
-
-    app.tk.protocol("WM_DELETE_WINDOW", lambda: on_close(app))
+    search.start()
+    app.tk.protocol("WM_DELETE_WINDOW", lambda: on_close(app, search))
 
     app.tk.after(UPDATE_INTERVAL, app.update_frame_show(DEFAULT_PIC))
     # put window on top
