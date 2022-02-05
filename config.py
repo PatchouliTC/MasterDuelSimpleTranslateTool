@@ -1,5 +1,6 @@
 # front for the texts
-FRONT_SIZE = 15
+CARD_NAME_SIZE = 14
+CARD_DESC_SIZE = 12
 FRONT = '微软雅黑'
 
 # default card pic to show when there's no match
