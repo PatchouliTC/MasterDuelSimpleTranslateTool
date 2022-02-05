@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import ImageTk, Image
+from ctypes import windll
 
 # import module for getting card information
 import search_engine as search
@@ -27,7 +28,7 @@ class App():
             master=self.frame_control,
             text="开始",
             width=10,
-            height=2,
+            height=1,
             bg="grey",
             fg="blue",
             command=self.pause_unpause
@@ -37,7 +38,7 @@ class App():
             master=self.frame_control,
             text="切换至决斗",
             width=10,
-            height=2,
+            height=1,
             bg="grey",
             fg="blue",
             command=self.switch_mode,
@@ -60,8 +61,8 @@ class App():
         )
 
         self.frame_control.pack(fill=tk.BOTH, expand=False)
-        self.button_Start.pack(side=tk.LEFT)
-        self.button_Mode.pack(side=tk.RIGHT)
+        self.button_Start.pack(side=tk.LEFT, padx=10, pady=10)
+        self.button_Mode.pack(side=tk.RIGHT, padx=10, pady=10)
         self.frame_show.pack(fill=tk.BOTH, expand=True)
 
         try:
@@ -131,6 +132,7 @@ def on_close(app, search):
 
 
 def main():
+    windll.shcore.SetProcessDpiAwareness(1)
     app = App()
     search.start()
     app.tk.protocol("WM_DELETE_WINDOW", lambda: on_close(app, search))
