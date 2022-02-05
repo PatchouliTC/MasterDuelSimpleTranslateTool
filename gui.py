@@ -103,11 +103,11 @@ class App():
     
     def pause_unpause(self):
         if self.is_paused:
-            search.pause()
+            search.unpause()
             self.button_Start.configure(text="暂停")
             self.is_paused = False
         else:
-            search.unpause()
+            search.pause()
             self.button_Start.configure(text="继续")
             self.is_paused = True
                       
