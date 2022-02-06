@@ -94,11 +94,13 @@ class App():
 
     def configure_window(self):
         self.tk.minsize(200, 200)
-        # manually resizing th window will cause th window to stop auto resizing, therefore disabled
+        # Disable resizable because resizing the window will cause the window to stop auto resizing.
         self.tk.resizable(False, False)
+        # Remove title bar and make the window stay at the top.
         self.tk.overrideredirect(True)
         self.tk.attributes("-topmost", True)
         self.tk.geometry(f"+{START_POS_X}+{START_POS_Y}")
+        # Allow the window to be dragged around.
         self.configure_dragger(self.control_area)
         self.configure_dragger(self.display_area)
         self.configure_dragger(self.card_pic)

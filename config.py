@@ -2,6 +2,7 @@
 BUTTON_FONT_SIZE = 8
 CARD_NAME_SIZE = 14
 CARD_DESC_SIZE = 10
+# Use a better font than Microsoft YaHei if possible.
 PREFERRED_FONT = "Noto Sans CJK SC Regular"
 DEFAULT_FONT = '微软雅黑'
 
