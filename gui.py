@@ -128,16 +128,21 @@ class App():
             self.card_name["text"] = search.get_card_name()
             self.card_desc["text"] = search.get_card_desc()
 
-
     def pause_unpause(self):
         if self.is_paused:
-            search.unpause()
-            self.start_button.configure(text="暂停")
-            self.is_paused = False
+            self.unpause()
         else:
-            search.pause()
-            self.start_button.configure(text="继续")
-            self.is_paused = True
+            self.pause()
+
+    def pause(self):
+        search.pause()
+        self.start_button.configure(text="继续")
+        self.is_paused = True
+
+    def unpause(self):
+        search.unpause()
+        self.start_button.configure(text="暂停")
+        self.is_paused = False
 
     def switch_mode(self):
         if self.duel_mode:
@@ -148,6 +153,7 @@ class App():
             search.switch_mode()
             self.mode_button.configure(text="切换至决斗")
             self.duel_mode = True
+        self.unpause()
 
     def configure_dragger(self, widget):
         widget.bind("<ButtonPress-1>", self.start_move)
