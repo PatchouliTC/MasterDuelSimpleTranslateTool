@@ -5,9 +5,11 @@ __pycache__
 *.pyc
 simple_img/*
 origin_ygo_img/*
+pics/*
 build
 dist
 *.spec
 *.cdb
 *.png
 *.jpg
+*.rar

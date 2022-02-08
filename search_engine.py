@@ -21,6 +21,12 @@ def pause():
     mda.status_change(False, True, False)
 
 
+def unpause():
+    """method to unpause searching
+    """
+    mda.status_change(False, False, False)
+
+
 def switch_mode():
     """method to switch between deck / duel searching
     """
