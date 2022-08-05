@@ -56,8 +56,8 @@ switch_hotkey = 'ctrl+s'
 deck_left_top = (64, 200)
 deck_right_bottom = (64+144, 200+210)
 # duel
-duel_left_top = (40, 208)
-duel_right_bottom = (40+168, 208+244)
+duel_left_top = (40, 225)
+duel_right_bottom = (40+156, 225+227)
 
 
 def cls():
